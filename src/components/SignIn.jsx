@@ -1,32 +1,16 @@
 import { Formik } from 'formik'
 import React from 'react'
-import { Pressable, View } from 'react-native'
-import theme from '../theme'
 import FormikTextInput from './FormikTextInput'
 
 import * as yup from 'yup'
 
-import Text from './Text'
 import useSignIn from '../hooks/useSignIn'
 import { useHistory } from 'react-router'
+import Button from './Button'
+import { View } from 'react-native'
+import themeStyles from '../themeStyles'
 
-const SignIn = () => {
-  const [ signIn ] = useSignIn()
-
-  const history = useHistory()
-
-  const onSubmit = async values => {
-    const { username, password } = values
-
-    try {
-      if (await signIn({ username, password })) {
-        history.push('/')
-      }
-    } catch (e) {
-      console.log(e)
-    }
-  }
-
+export const SignInContainer = ({ onSubmit }) => {
   return <Formik
     initialValues={{
       username: '',
@@ -39,42 +23,47 @@ const SignIn = () => {
     onSubmit={onSubmit}
   >
     {({ handleSubmit }) => {
-      return <View style={{
-        backgroundColor: 'white',
-        paddingHorizontal: 20,
-        paddingVertical: 10
-      }}>
+      return <View style={themeStyles.baseView}>
         <FormikTextInput
+          testID='usernameField'
           name='username'
           placeholder='Username'
         />
         <FormikTextInput
+          testID='passwordField'
           name='password'
           placeholder='Password'
           secureTextEntry
         />
-        <Pressable onPress={handleSubmit}>
-          <View style={{
-            backgroundColor: theme.colors.primary,
-            borderRadius: 3,
-            marginVertical: 10,
-          }}>
-            <Text
-              fontWeight='bold'
-              style={{
-                color: 'white',
-                alignSelf: 'center',
-                paddingHorizontal: 10,
-                paddingVertical: 15
-              }}
-            >
-              Sign In
-            </Text>
-          </View>
-        </Pressable>
+        <Button
+          primary
+          testID='submitButton'
+          onPress={handleSubmit}
+          label='Sign In'
+        />
       </View>
     }}
   </Formik>
+}
+
+const SignIn = () => {
+  const [ signIn ] = useSignIn()
+
+  const history = useHistory()
+
+  const onSubmit = async values => {
+    const { username, password } = values
+
+    try {
+      if (await signIn({ username, password })) {
+        history.push('/repositories')
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  return <SignInContainer onSubmit={onSubmit} />
 }
 
 export default SignIn

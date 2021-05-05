@@ -11,6 +11,19 @@ export const REPOSITORY_DETAILS = gql`
     ratingAverage
     stargazersCount
     reviewCount
+    url
   }
+`
 
+export const REVIEW_DETAILS = gql`
+  fragment ReviewDetails on Review {
+    id
+    text
+    rating
+    createdAt
+    user {
+      id
+      username
+    }
+  }
 `

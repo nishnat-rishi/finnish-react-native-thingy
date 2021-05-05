@@ -1,6 +1,5 @@
 import React from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
-import { Link } from 'react-router-native'
 import Text from './Text'
 
 const appBarTabStyles = StyleSheet.create({

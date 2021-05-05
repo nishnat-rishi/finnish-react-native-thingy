@@ -9,7 +9,10 @@ import AppBar from './AppBar'
 import AppBarTab from './AppBarTab'
 import AppBarTabNormal from './AppBarTabNormal'
 import RepositoryList from './RepositoryList'
+import RepositoryPage from './RepositoryPage'
+import ReviewForm from './ReviewForm'
 import SignIn from './SignIn'
+import SignUp from './SignUp'
 
 const styles = StyleSheet.create({
   container: {
@@ -32,20 +35,36 @@ const Main = () => {
         backgroundColor={theme.colors.appBarColor}
       />
       <AppBar>
-        <AppBarTab title='Repositories' to='/' />
-        {signedInUser.data && (
+        <AppBarTab title='Repositories' to='/repositories' />
+        {signedInUser.data &&
           signedInUser.data.authorizedUser
-            ? <AppBarTabNormal title='Sign Out' onClick={handleSignOut}/>
-            : <AppBarTab title='Sign In' to='/login' />
-        )}
+          ? <>
+            <AppBarTab title='Create a review' to='/review' />
+            <AppBarTabNormal title='Sign Out' onClick={handleSignOut}/>
+          </>
+          : <>
+            <AppBarTab title='Sign In' to='/login' />
+            <AppBarTab title='Sign Up' to='/signup'/>
+          </>
+        }
       </AppBar>
       <View style={styles.container}>
+        <Redirect to='/repositories' />
         <Switch>
-          <Route path='/' exact>
+          <Route path='/repositories' exact>
             <RepositoryList />
+          </Route>
+          <Route path='/repositories/:id'>
+            <RepositoryPage />
+          </Route>
+          <Route path='/review'>
+            <ReviewForm />
           </Route>
           <Route path='/login'>
             <SignIn />
+          </Route>
+          <Route path='/signup'>
+            <SignUp />
           </Route>
         </Switch>
       </View>

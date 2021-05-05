@@ -1,5 +1,4 @@
 import { useQuery } from '@apollo/client'
-import { useState, useEffect } from 'react'
 import { ALL_REPOSITORIES } from '../graphql/queries'
 
 // fetch
@@ -26,17 +25,42 @@ import { ALL_REPOSITORIES } from '../graphql/queries'
 
 
 // GraphQL
-const useRepositories = () => {
-  const { loading, refetch, data } = useQuery(ALL_REPOSITORIES,
+const useRepositories = (variables) => {
+  const { loading, refetch, fetchMore, data, networkStatus } = useQuery(
+    ALL_REPOSITORIES,
     {
-      fetchPolicy: 'cache-and-network'
-    }
+      variables,
+      fetchPolicy: 'cache-and-network',
+    },
   )
 
+  const handleFetchMore = async () => {
+    const canFetchMore = !loading && data?.repositories.pageInfo.hasNextPage
+
+    console.log(canFetchMore, loading, data?.repositories.pageInfo.hasNextPage)
+
+    if (!canFetchMore) {
+      return
+    }
+
+    console.log('fetching more...')
+    const f = await fetchMore({
+      variables: {
+        after: data.repositories.pageInfo.endCursor,
+        ...variables
+      },
+
+    })
+    console.log('f:', f)
+    console.log('repositories:', data.repositories)
+  }
+
   return {
-    repositories: data ? data.repositories : null,
+    repositories: data?.repositories,
     refetch,
-    loading
+    fetchMore: handleFetchMore,
+    loading,
+    networkStatus
   }
 }
 

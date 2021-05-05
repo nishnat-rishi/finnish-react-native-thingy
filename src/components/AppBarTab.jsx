@@ -15,7 +15,7 @@ const appBarTabStyles = StyleSheet.create({
   }
 })
 
-const AppBarTab = ({ title, to, onClick }) => {
+const AppBarTab = ({ title, to }) => {
 
   return <Link to={to} style={[ appBarTabStyles.tab ]}>
     <View style={{
